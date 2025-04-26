@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class ExtractJWT {
 
-    public static String payloadJWTExtraction(String token) {
+    public static String payloadJWTExtraction(String token, String extraction) {
 
         token = token.replace("Bearer ", "");
 
@@ -29,7 +29,7 @@ public class ExtractJWT {
         /* Loop through all key-value pairs until we find a value of "sub" */
         for (String entry : entries) {
             String[] keyValue = entry.split(":");
-            if (keyValue[0].equals("\"sub\"")) {
+            if (keyValue[0].equals(extraction)) {
                 // Extract and purify the value of e-mail by removing surrounding "" and '}' at the end
                 keyValue[1] = keyValue[1].substring(1, keyValue[1].length() - 2);
             }
@@ -38,8 +38,8 @@ public class ExtractJWT {
             }
         }
         /* If the map contains the "sub" key, then return the value which is the e-mail */
-        if (map.containsKey("\"sub\"")) {
-            return map.get("\"sub\"");
+        if (map.containsKey(extraction)) {
+            return map.get(extraction);
         }
         /* Otherwise, return null */
         return null;
