@@ -26,4 +26,14 @@ public class ReviewController {
         }
         reviewService.postReview(userEmail, reviewRequest);
     }
+
+    @GetMapping("/secure/user/book")
+    public Boolean reviewBookByUser(@RequestHeader(value = "Authorization") String token,
+                                    @RequestParam Long bookId) throws Exception {
+        String userEmail = ExtractJWT.payloadJWTExtraction(token, "\"sub\"");
+        if (userEmail == null) {
+            throw new Exception("User email is missing from the token");
+        }
+        return reviewService.userReviewListed(userEmail, bookId);
+    }
 }
