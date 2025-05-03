@@ -30,8 +30,15 @@ public class ExtractJWT {
         for (String entry : entries) {
             String[] keyValue = entry.split(":");
             if (keyValue[0].equals(extraction)) {
-                // Extract and purify the value of e-mail by removing surrounding "" and '}' at the end
-                keyValue[1] = keyValue[1].substring(1, keyValue[1].length() - 2);
+                // Extract and purify the value of e-mail by removing surrounding double quotes ("")
+                // and a curly brace ('}') at the end of the keyValue[1]
+                final int removeChars;
+                if (keyValue[1].endsWith("\"}")) {
+                    removeChars = 2;
+                } else {
+                    removeChars = 1;
+                }
+                keyValue[1] = keyValue[1].substring(1, keyValue[1].length() - removeChars);
             }
             if (keyValue.length > 1) {
                 map.put(keyValue[0], keyValue[1]);
