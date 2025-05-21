@@ -1,6 +1,8 @@
 package com.dap_studio.spring_boot_expert_library.service;
 
 import com.dap_studio.spring_boot_expert_library.dao.BookRepository;
+import com.dap_studio.spring_boot_expert_library.dao.CheckoutRepository;
+import com.dap_studio.spring_boot_expert_library.dao.ReviewRepository;
 import com.dap_studio.spring_boot_expert_library.entity.Book;
 import com.dap_studio.spring_boot_expert_library.request_models.AddBookRequest;
 import org.springframework.stereotype.Service;
@@ -13,10 +15,15 @@ import java.util.Optional;
 public class AdminService {
 
     private final BookRepository bookRepository;
+    private final ReviewRepository reviewRepository;
+    private final CheckoutRepository checkoutRepository;
 
-
-    public AdminService(BookRepository bookRepository) {
+    public AdminService(BookRepository bookRepository,
+                        ReviewRepository reviewRepository,
+                        CheckoutRepository checkoutRepository) {
         this.bookRepository = bookRepository;
+        this.reviewRepository = reviewRepository;
+        this.checkoutRepository = checkoutRepository;
     }
 
     public void increaseBookQuantity(Long bookId) throws Exception{
@@ -55,5 +62,15 @@ public class AdminService {
         book.setImg(addBookRequest.getImg());
 
         bookRepository.save(book);
+    }
+
+    public void deleteBook(Long bookId) throws Exception {
+        Optional<Book> book = bookRepository.findById(bookId);
+        if (!book.isPresent()) {
+            throw new Exception("Book does not exist");
+        }
+        bookRepository.deleteById(bookId);
+        checkoutRepository.deleteAllByBookId(bookId);
+        reviewRepository.deleteAllByBookId(bookId);
     }
 }
