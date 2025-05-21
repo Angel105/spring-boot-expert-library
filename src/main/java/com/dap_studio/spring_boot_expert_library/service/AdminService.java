@@ -6,6 +6,7 @@ import com.dap_studio.spring_boot_expert_library.request_models.AddBookRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -16,6 +17,18 @@ public class AdminService {
 
     public AdminService(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
+    }
+
+    public void increaseBookQuantity(Long bookId) throws Exception{
+        Optional<Book> book = bookRepository.findById(bookId);
+        if (!book.isPresent()) {
+            throw new Exception("Book does not exist");
+        }
+        final int increment = 1;
+        book.get().setCopiesAvailable(book.get().getCopiesAvailable() + increment);
+        book.get().setCopies(book.get().getCopies() + increment);
+
+        bookRepository.save(book.get());
     }
 
     public void postBook(AddBookRequest addBookRequest) {
