@@ -6,7 +6,7 @@ import com.dap_studio.spring_boot_expert_library.service.MessagesService;
 import com.dap_studio.spring_boot_expert_library.utils.ExtractJWT;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin("http://localhost:5173")
+@CrossOrigin("https://localhost:5173")
 @RestController
 @RequestMapping("/api/messages")
 public class MessagesController {
